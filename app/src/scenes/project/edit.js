@@ -14,6 +14,8 @@ export default function EditProject() {
   const [bufferOtherLinkLabel, setBufferOtherLinkLabel] = useState("");
   const { id } = useParams();
 
+  console.log(id);
+
   useEffect(() => {
     (async () => {
       const { data: u } = await api.get(`/project/${id}`);
@@ -48,9 +50,10 @@ export default function EditProject() {
             initialValues={project}
             onSubmit={async (values) => {
               try {
-                await api.put(`/project/${project._id}`, values);
-                toast.success(`${project.name} updated!`);
-                history.push(`/project/${project._id}`);
+                console.log(values);
+                await api.put(`/project/${project[0]._id}`, values);
+                toast.success(`${project[0].name} updated!`);
+                history.push(`/project/${project[0]._id}`);
               } catch (e) {
                 console.log(e);
                 toast.error("Some Error!");
@@ -66,7 +69,7 @@ export default function EditProject() {
                   <div className="flex gap-4 flex-wrap">
                     <div className="w-full md:w-[260px] mt-2">
                       <div className="text-[14px] text-[#212325] font-medium	">Name of project</div>
-                      <input className="projectsInput text-[14px] font-normal text-[#212325] rounded-[10px]" name="name" disabled value={values.name} onChange={handleChange} />
+                      <input className="projectsInput text-[14px] font-normal text-[#212325] rounded-[10px]" name="name" value={values.name} onChange={handleChange} />
                     </div>
                     <div className="w-full md:w-[260px] mt-2">
                       <div className="text-[14px] text-[#212325] font-medium	">Lead by name</div>

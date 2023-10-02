@@ -1,24 +1,33 @@
-import React from "react";
+import React, { useState } from "react";
 import { NavLink } from "react-router-dom";
 import { ActivitiesIcon, HomeIcon, PeopleIcon, ProjectsIcon } from "../assets/Icons";
 
-const Drawer = () => {
-  return <DrawerDesktop />;
-};
+const Drawer = () => <DrawerDesktop />;
 
 const DrawerDesktop = () => {
+  const [open, setOpen] = useState(true);
   return (
-    <div className="flex-shrink-0 overflow-y-auto">
-      <ul className={`list-none px-3 z-10 border-r border-[#a0a6b124] space-y-2 translate-x-0 duration-200`}>
-        <Section title="Général">
-          <Link to="/" title="Home" Icon={HomeIcon} />
-          <Link to="/project" title="Projects" Icon={ProjectsIcon} />
-          <Link to="/activity" title="Activities" Icon={ActivitiesIcon} />
-          <Link to="/user" title="People" Icon={PeopleIcon} />
-        </Section>
+    <div>
+      {open ? (
+        <div className="flex-shrink-0 overflow-y-auto">
+          <ul className={`list-none px-3 z-10 border-r border-[#a0a6b124] space-y-2 translate-x-0 duration-200`}>
+            <Section title="Général" setOpen={setOpen}>
+              <Link to="/" title="Home" Icon={HomeIcon} />
+              <Link to="/project" title="Projects" Icon={ProjectsIcon} />
+              <Link to="/activity" title="Activities" Icon={ActivitiesIcon} />
+              <Link to="/user" title="People" Icon={PeopleIcon} />
+            </Section>
 
-        <div className="h-10" />
-      </ul>
+            <div className="h-10" />
+          </ul>
+        </div>
+      ) : (
+        <div
+          className="flex gap-1 items-center uppercase text-[10px] text-gray-400 tracking-wide font-semibold mt-4 cursor-pointer hover:underline mb-2"
+          onClick={() => setOpen(true)}>
+          Général
+        </div>
+      )}
     </div>
   );
 };
@@ -40,7 +49,8 @@ const Link = ({ Icon, title, to, onClick = () => {} }) => {
   );
 };
 
-const Section = ({ children, title }) => {
+const Section = ({ children, title, setOpen }) => {
+  //setOpen
   return (
     <div>
       <h1
