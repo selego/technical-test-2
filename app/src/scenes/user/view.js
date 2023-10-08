@@ -45,6 +45,7 @@ const Detail = ({ user }) => {
       onSubmit={async (values) => {
         try {
           await api.put(`/user/${user._id}`, values);
+          history.push(`/user`);
           toast.success("Updated!");
         } catch (e) {
           console.log(e);
