@@ -16,8 +16,8 @@ const ProjectList = () => {
 
   useEffect(() => {
     (async () => {
-      const { data: u } = await api.get("/project");
-      setProjects(u);
+      const { data } = await api.get("/project");
+      setProjects(data);
     })();
   }, []);
 
@@ -144,8 +144,9 @@ const Create = ({ onChangeSearch }) => {
                   values.status = "active";
                   const res = await api.post("/project", values);
                   if (!res.ok) throw res;
-                  toast.success("Created!");
                   setOpen(false);
+                  window.location.reload(false);
+                  toast.success("Created!");
                 } catch (e) {
                   console.log(e);
                   toast.error("Some Error!", e.code);

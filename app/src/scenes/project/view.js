@@ -1,9 +1,10 @@
 import { Chart as ChartJS, registerables } from "chart.js";
 import React, { useEffect, useState } from "react";
-import { IoIosAt, IoIosLink, IoIosStats, IoLogoGithub } from "react-icons/io";
-import { RiRoadMapLine } from "react-icons/ri";
-import { useSelector } from "react-redux";
+import { IoIosAt, IoIosLink } from "react-icons/io";
 import { useHistory, useParams } from "react-router-dom";
+import { Formik } from "formik";
+import LoadingButton from "../../components/loadingButton";
+import toast from "react-hot-toast";
 
 import { getDaysInMonth } from "./utils";
 
@@ -23,8 +24,8 @@ export default function ProjectView() {
 
   useEffect(() => {
     (async () => {
-      const { data: u } = await api.get(`/project/${id}`);
-      setProject(u);
+      const { data } = await api.get(`/project/${id}`);
+      setProject(data);
     })();
   }, []);
 
@@ -127,6 +128,7 @@ const Activities = ({ project }) => {
   const [activities, setActivities] = useState([]);
   const [date, setDate] = useState();
   const [days, setDays] = useState([]);
+  const [open, setOpen] = useState(false);
 
   useEffect(() => {
     if (!project || !date) return;
@@ -214,6 +216,9 @@ const Activities = ({ project }) => {
                                     alt={`avatar ${e?.user}`}
                                   />
                                   <div>{e.user}</div>
+                                  <div style={{ textDecoration: "underline", color: "blue", cursor: "pointer" }} onClick={() => setOpen(!open)}>
+                                    pay for selected month
+                                  </div>
                                 </div>
                                 <div className="text-md italic font-normal">{(e.total / 8).toFixed(2)} days</div>
                               </div>
@@ -222,6 +227,54 @@ const Activities = ({ project }) => {
                               return <Field key={`${e.user} ${j}`} value={f.value || 0} />;
                             })}
                           </tr>
+                          {open === true && (
+                            <tr className="border border-[#E5EAEF]" key={e.id}>
+                              <th className="w-[100px] border border-[#E5EAEF]  text-[12px] font-bold text-[#212325] text-left pl-[10px]">
+                                <div> Pay employee </div>
+                                <div style={{ color: "grey" }}> A payment will be created and send to the employee with stripe if you connected your account in Settings </div>
+                              </th>
+                              <th colSpan="30">
+                                <div className="w-full">
+                                  <Formik
+                                    initialValues={{}}
+                                    onSubmit={async (values, { setSubmitting }) => {
+                                      try {
+                                        console.log(values);
+                                        // send infos to backend to a route which implements stripe
+                                        setOpen(false);
+                                        toast.success("Payment successfully sent");
+                                      } catch (e) {
+                                        console.log(e);
+                                        toast.error("Some Error!", e.code);
+                                      }
+                                      setSubmitting(false);
+                                    }}>
+                                    {({ handleSubmit, isSubmitting }) => (
+                                      <React.Fragment>
+                                        <div className="w-full md:w-6/12 text-left">
+                                          <div>
+                                            <div className="text-[20px] text-[#212325] font-medium	">Amount to send to user (in euros)</div>
+                                            <input
+                                              className="projectsInput text-[14px] font-normal text-[#212325] rounded-[10px]"
+                                              name="name"
+                                              value={getTotal() * e.userSellPerDay}
+                                              disabled
+                                            />
+                                          </div>
+                                          <LoadingButton
+                                            className="mt-[1rem] bg-[#0560FD] text-[16px] font-medium text-[#FFFFFF] py-[12px] px-[22px] rounded-[10px]"
+                                            loading={isSubmitting}
+                                            onClick={handleSubmit}>
+                                            Send Payment
+                                          </LoadingButton>
+                                        </div>
+                                      </React.Fragment>
+                                    )}
+                                  </Formik>
+                                </div>
+                              </th>
+                            </tr>
+                          )}
                         </React.Fragment>
                       );
                     })}
