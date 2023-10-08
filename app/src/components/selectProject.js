@@ -5,7 +5,7 @@ import api from "../services/api";
 // eslint-disable-next-line react/display-name
 export default ({ value, active = true, onChange }) => {
   const [projects, setProjects] = useState([]);
-  
+
   useEffect(() => {
     (async () => {
       let str = ``;
@@ -23,8 +23,12 @@ export default ({ value, active = true, onChange }) => {
         value={value || ""}
         onChange={(e) => {
           e.preventDefault();
-          const f = projects.find((f) => e.target.value === f.name);
-          onChange(f);
+          if (e.target.value !== "") {
+            const f = projects.find((f) => e.target.value === f.name);
+            onChange(f);
+          } else {
+            onChange({ name: "" });
+          }
         }}>
         <option disabled>Project</option>
         <option value={""}>All Project</option>

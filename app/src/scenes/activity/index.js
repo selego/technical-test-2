@@ -55,9 +55,15 @@ const Activities = ({ date, user, project }) => {
       const { data } = await api.get(`/activity?date=${date.getTime()}&user=${user.name}&project=${project}`);
       const projects = await api.get(`/project/list`);
       setActivities(
-        data.map((activity) => {
-          return { ...activity, projectName: (activity.projectName = projects.data.find((project) => project._id === activity.projectId)?.name) };
-        }),
+        data
+          .map((activity) => {
+            return { ...activity, projectName: (activity.projectName = projects.data.find((project) => project._id === activity.projectId)?.name) };
+          })
+          .filter((activity) => {
+            // means we selected "All project" in project picker
+            if (project === "") return true;
+            return activity.projectName === project;
+          }),
       );
       setOpen(null);
     })();
