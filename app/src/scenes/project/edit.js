@@ -16,7 +16,9 @@ export default function EditProject() {
 
   useEffect(() => {
     (async () => {
-      const { data: u } = await api.get(`/project/${id}`);
+      const {
+        data: [u],
+      } = await api.get(`/project/${id}`);
       setProject(u);
     })();
   }, []);
