@@ -149,7 +149,7 @@ const Create = ({ onChangeSearch }) => {
                   history.push(`/project/${res.data._id}`);
                 } catch (e) {
                   console.log(e);
-                  toast.error("Some Error!", e.code);
+                  toast.error("Error: " + e.code);
                 }
                 setSubmitting(false);
               }}>

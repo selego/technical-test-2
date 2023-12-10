@@ -43,8 +43,10 @@ Schema.pre("save", function (next) {
   }
 });
 
-Schema.methods.comparePassword = function (p) {
-  return bcrypt.compare(p, this.password || "");
+Schema.methods.comparePassword = async function (p) {
+  const result = await bcrypt.compare(p, this.password || "");
+  console.log(result);
+  return result;
 };
 const OBJ = mongoose.model(MODELNAME, Schema);
 module.exports = OBJ;

@@ -26,13 +26,11 @@ export default () => {
           try {
             console.log("Values for username and password are: ", values);
             const { user, token } = await api.post(`/user/signup`, values);
-            console.log("Token is:", token);
-            console.log("User is", user);
             if (token) api.setToken(token);
             if (user) dispatch(setUser(user));
           } catch (e) {
             console.log("e", e);
-            toast.error("Wrong login", e.code);
+            toast.error("Wrong login: " + e.code);
           }
           actions.setSubmitting(false);
         }}>
