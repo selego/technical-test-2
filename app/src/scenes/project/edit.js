@@ -16,7 +16,9 @@ export default function EditProject() {
 
   useEffect(() => {
     (async () => {
-      const { data: u } = await api.get(`/project/${id}`);
+      const {
+        data: [u],
+      } = await api.get(`/project/${id}`);
       setProject(u);
     })();
   }, []);
@@ -53,7 +55,7 @@ export default function EditProject() {
                 history.push(`/project/${project._id}`);
               } catch (e) {
                 console.log(e);
-                toast.error("Some Error!");
+                toast.error("Error!: " + e.code);
               }
             }}>
             {({ values, handleChange, handleSubmit, isSubmitting }) => (
