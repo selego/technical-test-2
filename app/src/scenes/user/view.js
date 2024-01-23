@@ -7,7 +7,7 @@ import Loader from "../../components/loader";
 import LoadingButton from "../../components/loadingButton";
 import api from "../../services/api";
 
-export default () => {
+export default function UserView() {
   const [user, setUser] = useState(null);
   const { id } = useParams();
   useEffect(() => {
