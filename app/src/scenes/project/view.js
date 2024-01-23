@@ -100,7 +100,7 @@ const ProjectDetails = ({ project }) => {
 };
 const Budget = ({ project }) => {
   const [activities, setActivities] = useState([10, 29, 18, 12]);
-
+  console.log(activities);
   useEffect(() => {
     (async () => {
       let d = new Date();
