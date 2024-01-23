@@ -127,7 +127,7 @@ const Activities = ({ date, user, project }) => {
   const getTotal = () => {
     return (activities.reduce((acc, a) => acc + a.total, 0) / 8).toFixed(2);
   };
-  console.log(activities);
+
   return (
     <div className="flex flex-wrap py-3 gap-4 text-black">
       <div className="w-screen md:w-full p-2 md:!px-8">
