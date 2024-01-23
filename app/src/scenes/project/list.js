@@ -70,28 +70,36 @@ const ProjectList = () => {
             onClick={() => {
               handleTag("prospection");
             }}
-            className="inline-block rounded bg-primary px-6 pb-2 pt-2.5 text-xs font-medium text-white capitalize">
+            className={`inline-block rounded px-6 pb-2 pt-2.5 text-xs font-medium capitalize ${
+              selectedTags.includes("prospection") ? "bg-primary text-white" : "bg-white text-primary"
+            }`}>
             Prospection
           </button>
           <button
             onClick={() => {
               handleTag("startup-project");
             }}
-            className="inline-block rounded bg-primary px-6 pb-2 pt-2.5 text-xs font-medium text-white capitalize">
+            className={`inline-block rounded px-6 pb-2 pt-2.5 text-xs font-medium capitalize ${
+              selectedTags.includes("startup-project") ? "bg-primary text-white" : "bg-white text-primary"
+            }`}>
             Start-up Project
           </button>
           <button
             onClick={() => {
               handleTag("startup-invest");
             }}
-            className="inline-block rounded bg-primary px-6 pb-2 pt-2.5 text-xs font-medium text-white capitalize">
+            className={`inline-block rounded px-6 pb-2 pt-2.5 text-xs font-medium capitalize ${
+              selectedTags.includes("startup-invest") ? "bg-primary text-white" : "bg-white text-primary"
+            }`}>
             Start-up Invest
           </button>
           <button
             onClick={() => {
               handleTag("admin");
             }}
-            className="inline-block rounded bg-primary px-6 pb-2 pt-2.5 text-xs font-medium text-white capitalize">
+            className={`inline-block rounded px-6 pb-2 pt-2.5 text-xs font-medium capitalize ${
+              selectedTags.includes("admin") ? "bg-primary text-white" : "bg-white text-primary"
+            }`}>
             Admin
           </button>
         </div>
