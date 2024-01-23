@@ -11,6 +11,7 @@ import api from "../../services/api";
 const ProjectList = () => {
   const [projects, setProjects] = useState(null);
   const [activeProjects, setActiveProjects] = useState(null);
+  const [selectedTags, setSelectedTags] = useState([]);
 
   const history = useHistory();
 
@@ -24,7 +25,13 @@ const ProjectList = () => {
   useEffect(() => {
     const p = (projects || []).filter((p) => p.status === "active");
     setActiveProjects(p);
-  }, [projects]);
+  }, [projects, selectedTags]);
+
+  useEffect(() => {
+    if (selectedTags.length > 0) {
+      filterActiveProjectsByTags();
+    }
+  }, [selectedTags]);
 
   if (!projects || !activeProjects) return <Loader />;
 
@@ -33,9 +40,62 @@ const ProjectList = () => {
     setActiveProjects(p);
   };
 
+  const handleTag = (tag) => { 
+    if (selectedTags.includes(tag)) {
+      setSelectedTags(selectedTags.filter((e) => e !== tag));
+    } else {
+      setSelectedTags([...selectedTags, tag]);
+    }
+  };
+
+  async function filterActiveProjectsByTags() {
+    let filteredActiveProjects = [];
+    activeProjects?.map((project) => {
+      if (selectedTags.includes(project.type)) {
+        filteredActiveProjects.push(project);
+      }
+      setActiveProjects(filteredActiveProjects);
+    });
+  };
+
   return (
     <div className="w-full p-2 md:!px-8">
-      <Create onChangeSearch={handleSearch} />
+      <div className="flex justify-between items-center">
+        <Create onChangeSearch={handleSearch} />
+      </div>
+      <div className="flex flex-col justify-between items-start mt-3">
+        <div className="text-[18px] text-[#212325] font-semibold mb-2">Filter Active Projects</div>
+        <div className="flex flex-row w-[50%] justify-between">
+          <button
+            onClick={() => {
+              handleTag("prospection");
+            }}
+            className="inline-block rounded bg-primary px-6 pb-2 pt-2.5 text-xs font-medium text-white capitalize">
+            Prospection
+          </button>
+          <button
+            onClick={() => {
+              handleTag("startup-project");
+            }}
+            className="inline-block rounded bg-primary px-6 pb-2 pt-2.5 text-xs font-medium text-white capitalize">
+            Start-up Project
+          </button>
+          <button
+            onClick={() => {
+              handleTag("startup-invest");
+            }}
+            className="inline-block rounded bg-primary px-6 pb-2 pt-2.5 text-xs font-medium text-white capitalize">
+            Start-up Invest
+          </button>
+          <button
+            onClick={() => {
+              handleTag("admin");
+            }}
+            className="inline-block rounded bg-primary px-6 pb-2 pt-2.5 text-xs font-medium text-white capitalize">
+            Admin
+          </button>
+        </div>
+      </div>
       <div className="py-3">
         {activeProjects.map((hit) => {
           return (
@@ -51,8 +111,11 @@ const ProjectList = () => {
                   </div>
                 </div>
               </div>
-              <div className="w-full md:w-[50%] border-r border-[#E5EAEF] pl-[10px]">
-                <span className="text-[14px] font-medium text-[#212325]">{hit.description ? hit.description : ""}</span>
+              <div className="w-full md:w-[50%] border-r border-[#E5EAEF] pl-[10px] flex flex-col">
+                <span className=" inline-flex items-center rounded-md bg-blue-50 px-2 py-1 text-xs font-medium text-blue-700 ring-1 ring-inset ring-blue-700/10 w-24 flex flex-row justify-center my-2 capitalize">
+                  {hit.type ? hit.type : ""}
+                </span>
+                <span className="text-[14px] font-medium text-[#212325]">Description: {hit.description ? hit.description : ""}</span>
               </div>
               <div className="w-full md:w-[25%]  px-[10px]">
                 <span className="text-[16px] font-medium text-[#212325]">Budget consumed {hit.paymentCycle === "MONTHLY" && "this month"}:</span>
