@@ -42,14 +42,14 @@ export default () => {
         <form onSubmit={handleSubmit}>
           <React.Fragment>
             {/* First Row */}
-            <div className="flex justify-between flex-wrap mt-3">
+            <div className="flex j</div>ustify-between flex-wrap mt-3">
               <div className="w-full md:w-[48.5%]">
                 <div>Name</div>
                 <input className="projectsInput" name="name" value={values.name} onChange={(e) => setValues({ ...values, name: e.target.value })} />
               </div>
               <div className="w-full md:w-[48.5%]">
                 <div>Email</div>
-                <input className="projectsInput" value={values.email} />
+                <input className="projectsInput" value={values.email} onChange={(e) => setValues({ ...values, email: e.target.value })} />
               </div>
             </div>
             {/* second Row */}
