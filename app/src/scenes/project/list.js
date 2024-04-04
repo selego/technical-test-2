@@ -33,6 +33,23 @@ const ProjectList = () => {
     setActiveProjects(p);
   };
 
+  const exportProjectReport = (project, e) => {
+    e.stopPropagation(); // Prevent triggering any other click events
+
+    const csvContent = `data:text/csv;charset=utf-8,`
+      + `Project ID,Project Name,Description,Status\n`
+      + `${project._id},${project.name},${project.description},${project.status}\n`;
+
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.setAttribute('href', url);
+    link.setAttribute('download', `project-report-${project._id}.csv`);
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
+  
   return (
     <div className="w-full p-2 md:!px-8">
       <Create onChangeSearch={handleSearch} />
@@ -49,6 +66,12 @@ const ProjectList = () => {
                   <div className="flex flex-col flex-wrap flex-1">
                     <div className="text-[18px] text-[#212325] font-semibold flex flex-wrap">{hit.name}</div>
                   </div>
+                  <button
+                  onClick={(e) => exportProjectReport(hit, e)}
+                  className="text-xs bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-2 rounded"
+                >
+                  Export
+                  </button>
                 </div>
               </div>
               <div className="w-full md:w-[50%] border-r border-[#E5EAEF] pl-[10px]">
