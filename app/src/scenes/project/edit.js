@@ -59,7 +59,16 @@ export default function EditProject() {
             {({ values, handleChange, handleSubmit, isSubmitting }) => (
               <React.Fragment>
                 <div className="flex gap-4 pl-4 pt-4">
-                  {project.logo && <img className="w-[85px] h-[85px] border border-[#E5EAEF] rounded-[8px]" src={project.logo} alt="ProjectImage.png" />}
+                  {values.logo && <img className="w-[85px] h-[85px] border border-[#E5EAEF] rounded-[8px]" src={values.logo} alt="ProjectImage.png" />}
+                </div>
+                <div className="flex  gap-4 pl-4 pt-4">
+                  <input
+                    type="file"
+                    accept="image/*"
+                    onChange={(event) => {
+                      setFieldValue("logo", event.currentTarget.files[0]);
+                    }}
+                  />
                 </div>
 
                 <div className="py-3 px-4">
