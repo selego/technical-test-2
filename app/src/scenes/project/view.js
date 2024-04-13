@@ -88,6 +88,10 @@ const ProjectDetails = ({ project }) => {
 
                   <Budget project={project} />
                 </div>
+                <div className="mt-2 mr-2">
+                  <span className="text-[18px] font-semibold text-[#000000]">Date Started:</span>
+                  <span className="text-[16px] text-[#676D7C] font-medium">{new Date(project.created_at).toLocaleDateString()}</span>
+                </div>
               </div>
             </div>
           </div>
