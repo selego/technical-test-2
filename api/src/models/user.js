@@ -30,6 +30,7 @@ const Schema = new mongoose.Schema({
   status: { type: String, default: "active" },
   availability: { type: String, default: "available" },
   address: { type: String },
+  mobileNumber: { type: String },
 });
 
 Schema.pre("save", function (next) {
