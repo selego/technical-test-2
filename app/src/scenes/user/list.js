@@ -105,7 +105,16 @@ const Create = () => {
               e.stopPropagation();
             }}>
             <Formik
-              initialValues={{}}
+              initialValues={{ username: "", email: "", password: "" }}
+              validate={(values) => {
+                const errors = {};
+                if (!values.email) {
+                  errors.email = "Required";
+                } else if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(values.email)) {
+                  errors.email = "Invalid email address";
+                }
+                return errors;
+              }}
               onSubmit={async (values, { setSubmitting }) => {
                 try {
                   values.status = "active";
@@ -122,7 +131,7 @@ const Create = () => {
                 }
                 setSubmitting(false);
               }}>
-              {({ values, handleChange, handleSubmit, isSubmitting }) => (
+              {({ values, errors, touched, handleChange, handleSubmit, isSubmitting }) => (
                 <React.Fragment>
                   <div>
                     <div className="flex justify-between flex-wrap">
@@ -132,14 +141,29 @@ const Create = () => {
                       </div>
                       <div className="w-full md:w-[48%] mt-2">
                         <div className="text-[14px] text-[#212325] font-medium	">Email</div>
-                        <input className="projectsInput text-[14px] font-normal text-[#212325] rounded-[10px]" name="email" value={values.email} onChange={handleChange} />
+                        <input
+                          className="projectsInput text-[14px] font-normal text-[#212325]  rounded-[10px]"
+                          required
+                          type="email"
+                          name="email"
+                          value={values.email}
+                          onChange={handleChange}
+                        />
+                        {errors.email && touched.email && <div>{errors.email}</div>}
                       </div>
                     </div>
                     <div className="flex justify-between flex-wrap mt-3">
                       {/* Password */}
                       <div className="w-full md:w-[48%] mt-2">
                         <div className="text-[14px] text-[#212325] font-medium	">Password</div>
-                        <input className="projectsInput text-[14px] font-normal text-[#212325] rounded-[10px]" name="password" value={values.password} onChange={handleChange} />
+                        <input
+                          className="projectsInput text-[14px] font-normal text-[#212325] rounded-[10px]"
+                          name="password"
+                          required
+                          type="password"
+                          value={values.password}
+                          onChange={handleChange}
+                        />
                       </div>
                     </div>
                   </div>
