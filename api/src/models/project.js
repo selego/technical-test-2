@@ -15,7 +15,7 @@ const Schema = new mongoose.Schema({
   paymentCycle: { type: String, enum: ["MONTHLY", "ONE_TIME"], default: "MONTHLY" },
 
   organisation: { type: String, trim: true },
-  logo: { type: String, default: "https://www.gravatar.com/avatar/00000000000000000000000000000000?d=mp&f=y" },
+  logo: { type: String },
   background: { type: String, default: "" },
   objective: { type: String },
   budget_max_monthly: { type: Number },
