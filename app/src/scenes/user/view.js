@@ -131,7 +131,18 @@ const Detail = ({ user }) => {
                 value={values.description}
                 onChange={handleChange}></textarea>
             </div>
-
+            <div className="flex flex-wrap justify-between mt-4">
+              <div className="w-full md:w-[260px]">
+                <div className="text-[14px] text-[#212325] font-medium">Mobile Number</div>
+                <input
+                  className="projectsInput text-[14px] font-normal text-[#212325] rounded-[10px]"
+                  type="tel"
+                  name="mobileNumber"
+                  value={values.mobileNumber}
+                  onChange={handleChange}
+                />
+              </div>
+            </div>
             <div className="flex  mt-2">
               <LoadingButton className="bg-[#0560FD] text-[16px] font-medium text-[#FFFFFF] py-[12px] px-[22px] rounded-[10px]" loading={isSubmitting} onClick={handleSubmit}>
                 Update
