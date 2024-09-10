@@ -4,6 +4,7 @@ import toast from "react-hot-toast";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, Redirect } from "react-router-dom";
 import validator from "validator";
+import { IoIosArrowBack } from "react-icons/io";
 
 import { setUser } from "../../redux/auth/actions";
 
@@ -17,8 +18,11 @@ export default () => {
   return (
     // Auth Wrapper
     <div className="authWrapper font-myfont">
+      <Link to="/auth/login" className="flex gap-1 items-center">
+        <IoIosArrowBack />
+        <span>Go back</span>
+      </Link>
       <div className="font-[Helvetica] text-center text-[32px] font-semibold	mb-[15px]">Account team</div>
-
       {user && <Redirect to="/" />}
       <Formik
         initialValues={{ username: "", organisation: "", password: "" }}
@@ -29,7 +33,7 @@ export default () => {
             if (user) dispatch(setUser(user));
           } catch (e) {
             console.log("e", e);
-            toast.error("Wrong login", e.code);
+            toast.error("Error with signup", e.code);
           }
           actions.setSubmitting(false);
         }}>
