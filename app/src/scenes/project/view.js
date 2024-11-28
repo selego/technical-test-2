@@ -1,17 +1,16 @@
 import { Chart as ChartJS, registerables } from "chart.js";
 import React, { useEffect, useState } from "react";
-import { IoIosAt, IoIosLink, IoIosStats, IoLogoGithub } from "react-icons/io";
-import { RiRoadMapLine } from "react-icons/ri";
-import { useSelector } from "react-redux";
+import { IoIosAt, IoIosLink } from "react-icons/io";
 import { useHistory, useParams } from "react-router-dom";
 
-import { getDaysInMonth } from "./utils";
+import { getDaysInMonth, handleExportExcel } from "./utils";
 
 import Loader from "../../components/loader";
 import api from "../../services/api";
 
 import ProgressBar from "../../components/ProgressBar";
 import SelectMonth from "./../../components/selectMonth";
+import projectService from "../../services/project";
 
 ChartJS.register(...registerables);
 
@@ -23,8 +22,8 @@ export default function ProjectView() {
 
   useEffect(() => {
     (async () => {
-      const { data: u } = await api.get(`/project/${id}`);
-      setProject(u);
+      const project = await projectService.getById(id);
+      setProject(project);
     })();
   }, []);
 
@@ -45,6 +44,9 @@ export default function ProjectView() {
               <span className="text-[18px] text-[#212325] font-semibold">Project details</span>
             </div>
             <div className="flex items-center gap-2">
+              <button onClick={() => handleExportExcel(project)} className="border !border-[#0560FD] text-[#0560FD] py-[7px] px-[20px] bg-[#FFFFFF] rounded-[16px]">
+                Monthly XLSX export
+              </button>
               <button
                 onClick={() => history.push(`/project/edit/${project?._id}`)}
                 className="border !border-[#0560FD] text-[#0560FD] py-[7px] px-[20px] bg-[#FFFFFF] rounded-[16px]">
@@ -60,7 +62,7 @@ export default function ProjectView() {
 }
 
 const ProjectDetails = ({ project }) => {
-  console.log(project);
+  console.log({ project });
   return (
     <div>
       <div className="flex flex-wrap p-3">
@@ -68,8 +70,8 @@ const ProjectDetails = ({ project }) => {
           <div className="flex gap-3">
             <div className="w-full">
               <div className="flex justify-between gap-2">
-                <div className="flex gap-20">
-                  <span className="w-fit text-[20px] text-[#0C1024] font-bold">Nom du projet : </span>
+                <div className="flex gap-2">
+                  <span className="w-fit text-[20px] text-[#0C1024] font-bold">Project name : </span>
                   <span className="w-fit text-[20px] text-[#0C1024] font-bold">{project.name.toString()}</span>
                 </div>
                 <div className="flex flex-1 flex-column items-end gap-3">

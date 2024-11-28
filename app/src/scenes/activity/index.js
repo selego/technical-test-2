@@ -52,7 +52,7 @@ const Activities = ({ date, user, project }) => {
 
   useEffect(() => {
     (async () => {
-      const { data } = await api.get(`/activity?date=${date.getTime()}&user=${user.name}&project=${project}`);
+      const { data } = await api.get(`/activity?date=${date.getTime()}&userId=${user._id}&project=${project}`);
       const projects = await api.get(`/project/list`);
       setActivities(
         data.map((activity) => {
@@ -211,7 +211,7 @@ const Activities = ({ date, user, project }) => {
                                 <textarea
                                   value={e.comment}
                                   onChange={(e) => onUpdateComment(i, e.target.value)}
-                                  placeholder={`Please add a comment on what you deliver on ${e.project} (We need to show value created to clients)`}
+                                  placeholder={`Please add a comment on what you deliver on ${e.projectName} (We need to show value created to clients)`}
                                   rows={6}
                                   className="w-full text-sm pt-2 pl-2"
                                 />

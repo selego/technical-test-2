@@ -5,6 +5,7 @@ import { useHistory } from "react-router-dom";
 import Loader from "../../components/loader";
 import LoadingButton from "../../components/loadingButton";
 import api from "../../services/api";
+import userService from "../../services/users";
 
 const NewList = () => {
   const [users, setUsers] = useState(null);
@@ -111,14 +112,14 @@ const Create = () => {
                   values.status = "active";
                   values.availability = "not available";
                   values.role = "ADMIN";
-                  const res = await api.post("/user", values);
-                  if (!res.ok) throw res;
+
+                  const newUser = await userService.create(values);
                   toast.success("Created!");
                   setOpen(false);
-                  history.push(`/user/${res.data._id}`);
-                } catch (e) {
-                  console.log(e);
-                  toast.error("Some Error!", e.code);
+                  history.push(`/user/${newUser._id}`);
+                } catch (error) {
+                  console.log(error);
+                  toast.error("Failed to create user");
                 }
                 setSubmitting(false);
               }}>
@@ -128,11 +129,17 @@ const Create = () => {
                     <div className="flex justify-between flex-wrap">
                       <div className="w-full md:w-[48%] mt-2">
                         <div className="text-[14px] text-[#212325] font-medium	">Name</div>
-                        <input className="projectsInput text-[14px] font-normal text-[#212325] rounded-[10px]" name="username" value={values.username} onChange={handleChange} />
+                        <input className="projectsInput text-[14px] font-normal text-[#212325] rounded-[10px]" name="name" value={values.name} onChange={handleChange} />
                       </div>
                       <div className="w-full md:w-[48%] mt-2">
                         <div className="text-[14px] text-[#212325] font-medium	">Email</div>
-                        <input className="projectsInput text-[14px] font-normal text-[#212325] rounded-[10px]" name="email" value={values.email} onChange={handleChange} />
+                        <input
+                          className="projectsInput text-[14px] font-normal text-[#212325] rounded-[10px]"
+                          name="email"
+                          value={values.email}
+                          type="email"
+                          onChange={handleChange}
+                        />
                       </div>
                     </div>
                     <div className="flex justify-between flex-wrap mt-3">

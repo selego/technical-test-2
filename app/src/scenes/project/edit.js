@@ -7,6 +7,7 @@ import LoadingButton from "../../components/loadingButton";
 import api from "../../services/api";
 
 import toast from "react-hot-toast";
+import projectService from "../../services/project";
 
 export default function EditProject() {
   const [project, setProject] = useState(null);
@@ -26,9 +27,13 @@ export default function EditProject() {
   async function deleteData() {
     const confirm = window.confirm("Are you sure ?");
     if (!confirm) return;
-    await api.remove(`/project/${id}`);
-    toast.success("successfully removed!");
-    history.push("/projects");
+    try {
+      await projectService.delete(id);
+      toast.success("successfully removed!");
+      history.push("/projects");
+    } catch (error) {
+      toast.error("Failed to delete project");
+    }
   }
 
   if (!project) return <Loader />;
@@ -48,7 +53,7 @@ export default function EditProject() {
             initialValues={project}
             onSubmit={async (values) => {
               try {
-                await api.put(`/project/${project._id}`, values);
+                await projectService.update(project._id, values);
                 toast.success(`${project.name} updated!`);
                 history.push(`/project/${project._id}`);
               } catch (e) {
@@ -136,7 +141,14 @@ export default function EditProject() {
                   </div>
 
                   <div className="w-full mt-3">
-                    <div className="text-[14px] text-[#212325] font-medium	">Autres</div>
+                    <div className="text-[16px] text-[#212325] font-medium">Other links</div>
+                    <div className="flex gap-1 mt-2 mb-1">
+                      <div className="flex-1 flex gap-1">
+                        <div className="flex-1 text-[14px] text-[#212325] font-medium">Labels</div>
+                        <div className="flex-1 text-[14px] text-[#212325] font-medium">URLs</div>
+                      </div>
+                      <div className="w-[20px]"></div>
+                    </div>
                     {(values.links || []).map((link) => {
                       return (
                         <div className="flex flex-1 flex-row mt-2 items-center gap-1">
@@ -181,6 +193,7 @@ export default function EditProject() {
                         </div>
                       );
                     })}
+                    <div className="text-xl mt-4">Add another link</div>
                     <form
                       onSubmit={(e) => {
                         e.preventDefault();
@@ -192,28 +205,40 @@ export default function EditProject() {
                         setBufferOtherLink("");
                         setBufferOtherLinkLabel("");
                       }}>
-                      <input
-                        className="projectsInput text-[14px] font-normal text-[#212325] rounded-[10px]"
-                        name="other-links-label"
-                        value={bufferOtherLinkLabel}
-                        onChange={(e) => {
-                          setBufferOtherLinkLabel(e.target.value);
-                        }}
-                        placeholder="My super website"
-                      />
-                      <input
-                        className="projectsInput text-[14px] font-normal text-[#212325] rounded-[10px]"
-                        required
-                        name="other-links"
-                        value={bufferOtherLink}
-                        onChange={(e) => {
-                          setBufferOtherLink(e.target.value);
-                        }}
-                        placeholder="https://mysuperwebsite.com"
-                      />
+                      <div className="flex flex-col mb-2">
+                        <label htmlFor="other-links-label" className="text-[14px] text-[#212325] font-medium mb-1">
+                          Label
+                        </label>
+                        <input
+                          id="other-links-label"
+                          className="projectsInput text-[14px] font-normal text-[#212325] rounded-[10px]"
+                          name="other-links-label"
+                          value={bufferOtherLinkLabel}
+                          onChange={(e) => {
+                            setBufferOtherLinkLabel(e.target.value);
+                          }}
+                          placeholder="My super website"
+                        />
+                      </div>
+                      <div className="flex flex-col">
+                        <label htmlFor="other-links" className="text-[14px] text-[#212325] font-medium mb-1">
+                          URL
+                        </label>
+                        <input
+                          id="other-links"
+                          className="projectsInput text-[14px] font-normal text-[#212325] rounded-[10px]"
+                          required
+                          name="other-links"
+                          value={bufferOtherLink}
+                          onChange={(e) => {
+                            setBufferOtherLink(e.target.value);
+                          }}
+                          placeholder="https://mysuperwebsite.com"
+                        />
+                      </div>
                       {bufferOtherLink ? (
                         <button className="px-4 py-2 rounded-xl bg-[#0560FD] text-white mt-2" type="submit">
-                          ajouter
+                          add
                         </button>
                       ) : null}
                     </form>
