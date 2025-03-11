@@ -39,6 +39,25 @@ const Detail = ({ user }) => {
     history.push(`/user`);
   }
 
+  const calculateFinancials = (values) => {
+    const totalCost = parseFloat(values.costPerDay) * parseFloat(values.days_worked);
+    const totalSell = parseFloat(values.sellPerDay) * parseFloat(values.days_worked);
+    const totalProfit = totalSell - totalCost;
+
+    let profitClass = "text-gray-600";
+    let profitLabel = "Break-even";
+
+    if (totalProfit > 0) {
+      profitClass = "text-green-600";
+      profitLabel = "Profitable";
+    } else if (totalProfit < 0) {
+      profitClass = "text-red-600";
+      profitLabel = "Unprofitable";
+    }
+
+    return { totalCost, totalSell, totalProfit, profitClass, profitLabel };
+  };
+
   return (
     <Formik
       initialValues={user}
@@ -52,6 +71,8 @@ const Detail = ({ user }) => {
         }
       }}>
       {({ values, handleChange, handleSubmit, isSubmitting }) => {
+        const { totalCost, totalSell, profitClass, profitLabel } = calculateFinancials(values);
+
         return (
           <React.Fragment>
             <div className="flex justify-between flex-wrap mt-4">
@@ -121,6 +142,21 @@ const Detail = ({ user }) => {
                 />
               </div>
             </div>
+            <div className="flex flex-wrap justify-between mt-4">
+              <div className="w-full md:w-[260px] ">
+                <div className="text-[14px] text-[#212325] font-medium	">Total Cost</div>
+                <div className="text-[16px] text-[#212325] font-bold pt-3">{totalCost}</div>
+              </div>
+              <div className="w-full md:w-[260px] ">
+                <div className="text-[14px] text-[#212325] font-medium	">Total Sell</div>
+                <div className="text-[16px] text-[#212325] font-bold pt-3">{totalSell}</div>
+              </div>
+              <div className="w-full md:w-[260px]">
+                <div className="text-[14px] text-[#212325] font-medium">Total Profit</div>
+                <div className={`text-[16px] font-bold pt-3 ${profitClass}`}>{profitLabel}</div>
+              </div>
+            </div>
+
             <div className="w-full mt-3">
               <div className="text-[14px] text-[#212325] font-medium	">Description</div>
               <textarea
@@ -132,9 +168,9 @@ const Detail = ({ user }) => {
             </div>
 
             <div className="flex  mt-2">
-              <LoadingButton className="bg-[#0560FD] text-[16px] font-medium text-[#FFFFFF] py-[12px] px-[22px] rounded-[10px]" loading={isSubmitting} onChange={handleSubmit}>
+              <button className="bg-[#0560FD] text-[16px] font-medium text-[#FFFFFF] py-[12px] px-[22px] rounded-[10px]" loading={isSubmitting} onClick={handleSubmit}>
                 Update
-              </LoadingButton>
+              </button>
               <button className="ml-[10px] bg-[#F43F5E] text-[16px] font-medium text-[#FFFFFF] py-[12px] px-[22px] rounded-[10px]" onClick={deleteData}>
                 Delete
               </button>
