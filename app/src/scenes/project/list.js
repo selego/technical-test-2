@@ -35,7 +35,7 @@ const ProjectList = () => {
 
   return (
     <div className="w-full p-2 md:!px-8">
-      <Create onChangeSearch={handleSearch} />
+      <Create onChangeSearch={handleSearch} history={history} setProjects={setProjects} projects={projects} />
       <div className="py-3">
         {activeProjects.map((hit) => {
           return (
@@ -92,7 +92,7 @@ const Budget = ({ project }) => {
   return <ProgressBar percentage={width} max={budget_max_monthly} value={total} />;
 };
 
-const Create = ({ onChangeSearch }) => {
+const Create = ({ onChangeSearch, history, setProjects, projects }) => {
   const [open, setOpen] = useState(false);
 
   return (
@@ -132,13 +132,20 @@ const Create = ({ onChangeSearch }) => {
             setOpen(false);
           }}>
           <div
-            className="w-full md:w-[60%] max-h-[200px] bg-[white] p-[25px] rounded-md"
+            className="w-full md:w-[60%] max-h-[400px] bg-[white] p-[25px] rounded-md"
             onClick={(e) => {
               e.stopPropagation();
             }}>
             {/* Modal Body */}
             <Formik
-              initialValues={{}}
+              initialValues={{
+                name: "",
+                description: "",
+                objective: "",
+                status: "active",
+                budget_max_monthly: 0,
+                paymentCycle: "MONTHLY"
+              }}
               onSubmit={async (values, { setSubmitting }) => {
                 try {
                   values.status = "active";
@@ -146,6 +153,15 @@ const Create = ({ onChangeSearch }) => {
                   if (!res.ok) throw res;
                   toast.success("Created!");
                   setOpen(false);
+                  
+                  // Update the projects list with the new project
+                  if (res.data) {
+                    // Add the new project to the beginning of the projects array
+                    const updatedProjects = [res.data, ...projects];
+                    setProjects(updatedProjects);
+                    
+                    // The activeProjects will be updated automatically via the useEffect
+                  }
                 } catch (e) {
                   console.log(e);
                   toast.error("Some Error!", e.code);
@@ -154,10 +170,18 @@ const Create = ({ onChangeSearch }) => {
               }}>
               {({ values, handleChange, handleSubmit, isSubmitting }) => (
                 <React.Fragment>
-                  <div className="w-full md:w-6/12 text-left">
+                  <div className="w-full text-left">
                     <div>
                       <div className="text-[14px] text-[#212325] font-medium	">Name</div>
                       <input className="projectsInput text-[14px] font-normal text-[#212325] rounded-[10px]" name="name" value={values.name} onChange={handleChange} />
+                    </div>
+                    <div className="mt-2">
+                      <div className="text-[14px] text-[#212325] font-medium	">Description</div>
+                      <input className="projectsInput text-[14px] font-normal text-[#212325] rounded-[10px]" name="description" value={values.description} onChange={handleChange} />
+                    </div>
+                    <div className="mt-2">
+                      <div className="text-[14px] text-[#212325] font-medium	">Objective</div>
+                      <input className="projectsInput text-[14px] font-normal text-[#212325] rounded-[10px]" name="objective" value={values.objective} onChange={handleChange} />
                     </div>
                     <LoadingButton
                       className="mt-[1rem] bg-[#0560FD] text-[16px] font-medium text-[#FFFFFF] py-[12px] px-[22px] rounded-[10px]"
